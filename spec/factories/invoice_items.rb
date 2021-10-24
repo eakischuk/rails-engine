@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :mock_invoice_items do
+  factory :invoice_item do
     item
     invoice
     quantity { Faker::Number.between(from: 1, to: 25) }
