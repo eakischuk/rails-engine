@@ -53,7 +53,7 @@ RSpec.describe 'Merchants API' do
     end
 
     it 'allows user to specify per page' do
-      create_list(:merchant, 50)
+      create_list(:merchant, 55)
 
       get '/api/v1/merchants?per_page=50'
 
@@ -75,8 +75,8 @@ RSpec.describe 'Merchants API' do
 
   describe '/merchants/:id' do
     it 'retrieves single merchant record' do
-      merchant = create(:merchant)
-      get "/api/v1/merchants/#{merchant.id}"
+      merchant_1 = create(:merchant)
+      get "/api/v1/merchants/#{merchant_1.id}"
 
       expect(response).to be_successful
 
@@ -102,7 +102,6 @@ RSpec.describe 'Merchants API' do
 
     it 'returns a 400 error when no merchant found' do
       get '/api/v1/merchants/999999'
-      # binding.pry
       expect(response.status).to eq(404)
     end
   end
