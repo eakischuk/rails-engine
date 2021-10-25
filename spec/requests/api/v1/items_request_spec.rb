@@ -1,0 +1,118 @@
+require 'rails_helper'
+
+RSpec.describe 'Items API' do
+  describe '/items' do
+    it 'sends a list of merchants' do
+      create_list(:item, 4)
+
+      get '/api/v1/items'
+
+      expect(response).to be_successful
+
+      items = JSON.parse(response.body, symbolize_names: true)
+      expect(items).to be_a(Hash)
+      expect(items).to have_key(:data)
+
+      items_info = items[:data]
+      items_info.each do |item|
+        expect(item).to have_key(:id)
+        expect(item[:id]).to be_an(String)
+
+        expect(item).to have_key(:attributes)
+        expect(item[:attributes]).to be_a(Hash)
+
+        expect(item[:attributes]).to have_key(:name)
+        expect(item[:attributes][:name]).to be_a(String)
+
+        expect(item[:attributes]).to have_key(:description)
+        expect(item[:attributes][:description]).to be_a(String)
+
+        expect(item[:attributes]).to have_key(:unit_price)
+        expect(item[:attributes][:unit_price]).to be_a(Float)
+
+        expect(item[:attributes]).to have_key(:merchant_id)
+        expect(item[:attributes][:merchant_id]).to be_a(Integer)
+      end
+    end
+
+    it 'by default sends 20 merchants per page and defaults to page 1' do
+      create_list(:item, 25)
+
+      get '/api/v1/items'
+
+      expect(response).to be_successful
+
+      page_default = JSON.parse(response.body, symbolize_names: true)
+
+      expect(page_default[:data].count).to eq(20)
+
+      get '/api/v1/items?page=1'
+
+      page_1 = JSON.parse(response.body, symbolize_names: true)
+
+      expect(page_1[:data]).to eq(page_default[:data])
+
+      get '/api/v1/items?page=2'
+
+      page_2 = JSON.parse(response.body, symbolize_names: true)
+
+      expect(page_2[:data].count).to eq(5)
+      expect(page_2[:data]).to_not eq(page_1[:data])
+    end
+
+    it 'allows user to specify per page' do
+      create_list(:item, 55)
+
+      get '/api/v1/items?per_page=50'
+
+      page_1 = JSON.parse(response.body, symbolize_names: true)
+
+      expect(page_1[:data].count).to eq(50)
+    end
+
+    it 'returns no data for empty pages' do
+      create_list(:item, 20)
+      get '/api/v1/items?page=2'
+
+      page_2 = JSON.parse(response.body, symbolize_names: true)
+
+      expect(page_2[:data].empty?).to eq(true)
+    end
+  end
+
+  describe '/items/:id' do
+    it 'retrieves a single item record' do
+      item_1 = create(:item)
+
+      get "/api/v1/items/#{item_1.id}"
+
+      expect(response).to be_successful
+
+      item = JSON.parse(response.body, symbolize_names: true)
+
+      expect(item).to have_key(:data)
+      expect(item[:data]).to be_a(Hash)
+
+      item_attr = item[:data]
+      expect(item_attr).to have_key(:attributes)
+      expect(item_attr[:attributes]).to be_a(Hash)
+
+      expect(item_attr[:attributes]).to have_key(:name)
+      expect(item_attr[:attributes][:name]).to be_a(String)
+
+      expect(item_attr[:attributes]).to have_key(:description)
+      expect(item_attr[:attributes][:description]).to be_a(String)
+
+      expect(item_attr[:attributes]).to have_key(:unit_price)
+      expect(item_attr[:attributes][:unit_price]).to be_a(Float)
+
+      expect(item_attr[:attributes]).to have_key(:merchant_id)
+      expect(item_attr[:attributes][:merchant_id]).to be_a(Integer)
+    end
+
+    it 'returns a 400 error when no merchant found' do
+      get '/api/v1/items/999999'
+      expect(response.status).to eq(404)
+    end
+  end
+end
