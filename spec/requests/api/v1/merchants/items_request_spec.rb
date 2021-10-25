@@ -57,9 +57,9 @@ RSpec.describe 'Merchant Items API' do
       expect(items[:data].count).to eq(0)
     end
 
-    # it 'returns 404 when merchant not found' do
-    #   get "/api/v1/merchants/999999/items"
-    #   expect(response.status).to eq(404)
-    # end
+    it 'returns 404 when merchant not found' do
+      get "/api/v1/merchants/999999/items"
+      expect(response.status).to eq(404)
+    end
   end
 end

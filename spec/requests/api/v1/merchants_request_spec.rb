@@ -99,11 +99,11 @@ RSpec.describe 'Merchants API' do
       expect(merchant_data[:attributes]).to have_key(:name)
       expect(merchant_data[:attributes][:name]).to be_a(String)
     end
-    # 
-    # it 'returns a 400 error when no merchant found' do
-    #   get '/api/v1/merchants/999999'
-    #   # binding.pry
-    #   expect(response.status[:code]).to eq(404)
-    # end
+
+    it 'returns a 400 error when no merchant found' do
+      get '/api/v1/merchants/999999'
+      # binding.pry
+      expect(response.status).to eq(404)
+    end
   end
 end
