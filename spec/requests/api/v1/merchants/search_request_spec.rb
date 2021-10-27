@@ -33,6 +33,13 @@ RSpec.describe 'Merchants Search API' do
       expect(merchant_data[:attributes][:name]).to eq(@merchant_2.name)
     end
 
+    it 'returns empty data set if not found' do
+      get '/api/v1/merchants/find?name=phone'
+
+      expect(response).to be_successful
+      merchant = JSON.parse(response.body, symbolize_names: true)
+    end
+
     it 'returns 400 error if no params' do
       get '/api/v1/merchants/find'
 
