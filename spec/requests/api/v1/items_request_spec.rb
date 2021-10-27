@@ -135,25 +135,25 @@ RSpec.describe 'Items API' do
       expect(response.status).to eq(404)
     end
 
-    # it 'deletes invoice if only item on invoice' do
-    #   item_1 = create(:item)
-    #   item_2 = create(:item)
-    #   invoice_1 = create(:invoice)
-    #   invoice_2 = create(:invoice)
-    #   invoice_item_1 = create(:invoice_item, invoice: invoice_1, item: item_1)
-    #   invoice_item_2 = create(:invoice_item, invoice: invoice_2, item: item_1)
-    #   invoice_item_3 = create(:invoice_item, invoice: invoice_2, item: item_2)
-    #
-    #   expect(Item.all.count).to eq(2)
-    #   expect(Invoice.all.count).to eq(2)
-    #   expect(InvoiceItem.all.count).to eq(3)
-    #
-    #   delete "/api/v1/items/#{item_1.id}"
-    #
-    #   expect(Item.all.count).to eq(1)
-    #   expect(Invoice.all.count).to eq(1)
-    #   expect(InvoiceItem.all.count).to eq(1)
-    # end
+    it 'deletes invoice if only item on invoice' do
+      item_1 = create(:item)
+      item_2 = create(:item)
+      invoice_1 = create(:invoice)
+      invoice_2 = create(:invoice)
+      invoice_item_1 = create(:invoice_item, invoice: invoice_1, item: item_1)
+      invoice_item_2 = create(:invoice_item, invoice: invoice_2, item: item_1)
+      invoice_item_3 = create(:invoice_item, invoice: invoice_2, item: item_2)
+
+      expect(Item.all.count).to eq(2)
+      expect(Invoice.all.count).to eq(2)
+      expect(InvoiceItem.all.count).to eq(3)
+
+      delete "/api/v1/items/#{item_1.id}"
+
+      expect(Item.all.count).to eq(1)
+      expect(Invoice.all.count).to eq(1)
+      expect(InvoiceItem.all.count).to eq(1)
+    end
   end
 
   describe 'post to /api/v1/items' do

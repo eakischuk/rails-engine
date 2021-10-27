@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::API
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   rescue_from ActiveRecord::RecordInvalid, with: :bad_request
+  rescue_from ActiveRecord::StatementInvalid, with: :bad_request
   after_action :set_code_on_create, only: [:create]
 
   private
@@ -32,4 +33,5 @@ class ApplicationController < ActionController::API
       20
     end
   end
+
 end
