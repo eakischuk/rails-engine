@@ -7,11 +7,11 @@ class ApplicationController < ActionController::API
   private
 
   def record_not_found
-    render plain: "404 Not Found", status: 404
+    render json: { error: "404 Not Found" }, status: 404
   end
 
   def bad_request
-    render plain: "400 Bad Request", status: 400
+    render json: { error: "400 Bad Request" }, status: 400
   end
 
   def set_code_on_create
@@ -34,4 +34,7 @@ class ApplicationController < ActionController::API
     end
   end
 
+  def valid_quantity?
+    params[:quantity].present? && params[:quantity].to_i != 0
+  end
 end
