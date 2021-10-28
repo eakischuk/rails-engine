@@ -44,5 +44,18 @@ RSpec.describe Invoice, type: :model do
       expect(Invoice.total_revenue_between('2000-02-04', '2005-05-06')).to eq(70)
       expect(Invoice.total_revenue_between('2020-02-04', '2021-05-03')).to eq(0)
     end
+
+    it 'formats start date for beginning of day' do
+      invoice_1 = create(:invoice, created_at: '1999-05-22') # revenue 10
+      invoice_2 = create(:invoice, created_at: '2000-02-04') # revenue 30
+      invoice_3 = create(:invoice, created_at: '2002-04-15') # failed; revenue 4
+      invoice_4 = create(:invoice, created_at: '2005-03-24') # revenue 40
+
+      expect(Invoice.start_date_format('2000-02-04')).to eq('Fri, 04 Feb 2000 00:00:00 +0000')
+    end
+
+    it 'formats end date for end of day' do
+      expect(Invoice.end_date_format('2005-03-24')).to eq('Thu, 24 Mar 2005 23:59:59.999999999 +0000')
+    end
   end
 end
